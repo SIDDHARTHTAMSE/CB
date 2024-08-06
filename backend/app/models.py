@@ -112,3 +112,10 @@ class TokenPayload(SQLModel):
 class NewPassword(SQLModel):
     token: str
     new_password: str = Field(min_length=8, max_length=40)
+
+
+# Vendor Table
+class Vendor(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    vendor_code: str = Field(nullable=False)
+    name: str = Field(nullable=False)
