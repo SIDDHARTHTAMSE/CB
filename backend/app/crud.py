@@ -4,7 +4,7 @@ from typing import Any
 from sqlmodel import Session, select
 
 from app.core.security import get_password_hash, verify_password
-from app.models import Item, ItemCreate, User, UserCreate, UserUpdate
+from app.models import Item, ItemCreate, User, UserCreate, UserUpdate, Vendor
 
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
@@ -52,3 +52,21 @@ def create_item(*, session: Session, item_in: ItemCreate, owner_id: uuid.UUID) -
     session.commit()
     session.refresh(db_item)
     return db_item
+
+
+def get_vendors(session: Session):
+    return session.exec(select(Vendor)).all()
+
+
+def get_vendor_by_code(*, session: Session, code: str) -> Vendor | None:
+    query = select(Vendor).where(Vendor.vendor_code == code)
+    vendor = session.exec(query).one_or_none()
+    return vendor
+
+
+def create_vendor(session: Session, vendor: Vendor):
+    session.add(vendor)
+    session.commit()
+    session.refresh(vendor)
+    print(f"created new vendor {vendor.id}, {vendor.name}, {vendor.name}")
+    return vendor
