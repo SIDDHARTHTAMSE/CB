@@ -4,7 +4,7 @@ from typing import Any
 from sqlmodel import Session, select
 
 from app.core.security import get_password_hash, verify_password
-from app.models import Item, ItemCreate, User, UserCreate, UserUpdate, Vendor
+from app.models import Item, ItemCreate, User, UserCreate, UserUpdate, Vendor, Students
 
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
@@ -58,6 +58,10 @@ def get_vendors(session: Session):
     return session.exec(select(Vendor)).all()
 
 
+def get_student(session: Session):
+    return session.exec(select(Students)).all()
+
+
 def get_vendor_by_code(*, session: Session, code: str) -> Vendor | None:
     query = select(Vendor).where(Vendor.vendor_code == code)
     vendor = session.exec(query).one_or_none()
@@ -70,3 +74,21 @@ def create_vendor(session: Session, vendor: Vendor):
     session.refresh(vendor)
     print(f"created new vendor {vendor.id}, {vendor.name}, {vendor.name}")
     return vendor
+
+
+def get_student_by_usn(*, session: Session, usn: str) -> Students | None:
+    query = select(Students).where(Students.student_usn == usn)
+    student = session.exec(query).one_or_none()
+    return student
+
+
+def create_student(session: Session, student: Students):
+    session.add(student)
+    session.commit()
+    session.refresh(student)
+    print(f"created student "
+          f"{student.student_first_name},"
+          f" {student.student_last_name},"
+          f" {student.student_usn}"
+          )
+    return student
