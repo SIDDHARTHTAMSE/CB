@@ -119,3 +119,10 @@ class Vendor(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     vendor_code: str = Field(nullable=False)
     name: str = Field(nullable=False)
+
+
+class Students(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    student_first_name: str = Field(nullable=False)
+    student_last_name: str = Field(nullable=False)
+    student_usn: str = Field(nullable=False, unique=True)
