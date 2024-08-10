@@ -2,6 +2,7 @@ import uuid
 from typing import Any
 
 from sqlmodel import Session, select
+from uuid import UUID
 
 from app.core.security import get_password_hash, verify_password
 from app.models import Item, ItemCreate, User, UserCreate, UserUpdate, Vendor, Students
@@ -58,10 +59,6 @@ def get_vendors(session: Session):
     return session.exec(select(Vendor)).all()
 
 
-def get_student(session: Session):
-    return session.exec(select(Students)).all()
-
-
 def get_vendor_by_code(*, session: Session, code: str) -> Vendor | None:
     query = select(Vendor).where(Vendor.vendor_code == code)
     vendor = session.exec(query).one_or_none()
@@ -74,6 +71,30 @@ def create_vendor(session: Session, vendor: Vendor):
     session.refresh(vendor)
     print(f"created new vendor {vendor.id}, {vendor.name}, {vendor.name}")
     return vendor
+
+
+def update_vendor(session: Session, vendor_id: UUID, vendor_code: str, vendor_name: str):
+    vendor = session.get(Vendor, vendor_id)
+
+    if vendor is None:
+        return None
+
+    vendor.vendor_code = vendor_code
+    vendor.name = vendor_name
+
+    session.add(vendor)
+    session.commit()
+    session.refresh(vendor)
+    return vendor
+
+
+def delete_by_vendor(session: Session, vendor: Vendor):
+    session.delete(vendor)
+    session.commit()
+
+
+def get_student(session: Session):
+    return session.exec(select(Students)).all()
 
 
 def get_student_by_usn(*, session: Session, usn: str) -> Students | None:
@@ -92,3 +113,30 @@ def create_student(session: Session, student: Students):
           f" {student.student_usn}"
           )
     return student
+
+
+def update_student(
+        session: Session,
+        student_id: UUID,
+        student_first_name: str,
+        student_last_name: str,
+        student_usn: str
+):
+    student = session.get(Students, student_id)
+
+    if student is None:
+        return None
+
+    student.student_first_name = student_first_name
+    student.student_last_name = student_last_name
+    student.student_usn = student_usn
+
+    session.add(student)
+    session.commit()
+    session.refresh(student)
+    return student
+
+
+def delete_student(session: Session, student: Students):
+    session.delete(student)
+    session.commit()
