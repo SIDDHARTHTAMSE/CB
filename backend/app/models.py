@@ -60,6 +60,8 @@ class UsersPublic(SQLModel):
 class ItemBase(SQLModel):
     title: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=255)
+    address: str | None = Field(nullable=True)
+    contact_no: str | None = Field(nullable=True)
 
 
 # Properties to receive on item creation
@@ -126,3 +128,19 @@ class Students(SQLModel, table=True):
     student_first_name: str = Field(nullable=False)
     student_last_name: str = Field(nullable=False)
     student_usn: str = Field(nullable=False, unique=True)
+
+
+class SignIn(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    name: str = Field(nullable=False, max_length=32)
+    email: EmailStr = Field(unique=True, max_length=32)
+    password: str = Field(min_length=8, max_length=16)
+    confirm_password: str = Field(min_length=8, max_length=16)
+
+
+class VendorForm(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    vendor_code: str = Field(nullable=False)
+    vendor_name: str = Field(nullable=False)
+    address: str = Field(nullable=False)
+    contact_no: str = Field(nullable=False)
