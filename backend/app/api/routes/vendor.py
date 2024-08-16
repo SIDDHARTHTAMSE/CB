@@ -29,6 +29,12 @@ def create_new_vendor(session: SessionDep, vendor_req: vendor.CreateVendor):
     new_vendor = Vendor()
     new_vendor.vendor_code = vendor_req.vendor_code
     new_vendor.name = vendor_req.vendor_name
+    new_vendor.country = vendor_req.country
+    new_vendor.state = vendor_req.state
+    new_vendor.district = vendor_req.district
+    new_vendor.city = vendor_req.city
+    new_vendor.pin_code = vendor_req.pincode
+    new_vendor.contact_number = vendor_req.contact_no
     new_vendor = create_vendor(session=session, vendor=new_vendor)
     return JSONResponse(
         status_code=status.HTTP_201_CREATED,
@@ -76,7 +82,13 @@ def update_existing_vendor(session: SessionDep, vendor_id: UUID, vendor_req: ven
         session=session,
         vendor_id=vendor_id,
         vendor_code=vendor_req.vendor_code,
-        vendor_name=vendor_req.vendor_name
+        vendor_name=vendor_req.vendor_name,
+        country=vendor_req.country,
+        district=vendor_req.district,
+        state=vendor_req.state,
+        city=vendor_req.city,
+        pincode=vendor_req.pincode,
+        contact_no=vendor_req.contact_no
     )
 
     if updated_vendor is None:
