@@ -121,6 +121,12 @@ class Vendor(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     vendor_code: str = Field(nullable=False)
     name: str = Field(nullable=False)
+    country: str = Field(nullable=False, max_length=32)
+    district: str = Field(default=None, max_length=32)
+    state: str = Field(nullable=False, max_length=32)
+    city: str = Field(nullable=False, max_length=32)
+    pin_code: str = Field(nullable=True, max_length=16)
+    contact_number: str = Field(nullable=False, max_length=16)
 
 
 class Students(SQLModel, table=True):
@@ -144,3 +150,8 @@ class VendorForm(SQLModel, table=True):
     vendor_name: str = Field(nullable=False)
     address: str = Field(nullable=False)
     contact_no: str = Field(nullable=False)
+
+
+class College(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    students: str = Field(nullable=True)
