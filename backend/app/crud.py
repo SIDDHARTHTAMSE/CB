@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 from uuid import UUID
 
 from app.core.security import get_password_hash, verify_password
-from app.models import Item, ItemCreate, User, UserCreate, UserUpdate, Vendor, Students
+from app.models import Item, ItemCreate, User, UserCreate, UserUpdate, Vendor, Students, SignIn, VendorForm
 
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
@@ -73,15 +73,10 @@ def create_vendor(session: Session, vendor: Vendor):
     return vendor
 
 
-def update_vendor(session: Session, vendor_id: UUID, vendor_code: str, vendor_name: str):
-    vendor = session.get(Vendor, vendor_id)
-
-    if vendor is None:
-        return None
-
-    vendor.vendor_code = vendor_code
-    vendor.name = vendor_name
-
+def update_vendor(
+        session: Session,
+        vendor: Vendor
+):
     session.add(vendor)
     session.commit()
     session.refresh(vendor)
@@ -140,3 +135,17 @@ def update_student(
 def delete_student(session: Session, student: Students):
     session.delete(student)
     session.commit()
+
+
+def create_signin(session: Session, signin: SignIn):
+    session.add(signin)
+    session.commit()
+    session.refresh(signin)
+    return signin
+
+
+def create_vendor_form(session: Session, vendor_form: VendorForm):
+    session.add(vendor_form)
+    session.commit()
+    session.refresh(vendor_form)
+    return vendor_form
