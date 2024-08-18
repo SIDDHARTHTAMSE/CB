@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 from app.models import Vendor
@@ -12,6 +14,16 @@ class CreateVendor(BaseModel):
     city: str
     pincode: str
     contact_no: str
+
+
+class UpdateVendor(BaseModel):
+    vendor_name: Optional[str] = None
+    country: Optional[str] = None
+    state: Optional[str] = None
+    district: Optional[str] = None
+    city: Optional[str] = None
+    pincode: Optional[str] = None
+    contact_no: Optional[str] = None
 
 
 class CreateVendorRes(BaseModel):
