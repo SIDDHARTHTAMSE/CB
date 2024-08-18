@@ -76,28 +76,30 @@ def delete_vendor(session: SessionDep, vendor_code: str):
     )
 
 
-@router.put("/{vendor_id}", response_model=vendor.CreateVendorRes)
-def update_existing_vendor(session: SessionDep, vendor_id: UUID, vendor_req: vendor.CreateVendor):
-    updated_vendor = update_vendor(
-        session=session,
-        vendor_id=vendor_id,
-        vendor_code=vendor_req.vendor_code,
-        vendor_name=vendor_req.vendor_name,
-        country=vendor_req.country,
-        district=vendor_req.district,
-        state=vendor_req.state,
-        city=vendor_req.city,
-        pincode=vendor_req.pincode,
-        contact_no=vendor_req.contact_no
-    )
-
-    if updated_vendor is None:
+@router.put("/{vendor_code}", response_model=vendor.CreateVendorRes)
+def update_existing_vendor(
+        session: SessionDep,
+        vendor_code: str,
+        vendor_req: vendor.UpdateVendor
+):
+    # null check
+    existing_vendor = get_vendor_by_code(session=session, code=vendor_code)
+    if not existing_vendor:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Vendor not found"
         )
+    existing_vendor.name = vendor_req.vendor_name or existing_vendor.name
+    existing_vendor.country = vendor_req.country or existing_vendor.country
+    existing_vendor.state = vendor_req.state or existing_vendor.state
+    existing_vendor.district = vendor_req.district or existing_vendor.district
+    existing_vendor.city = vendor_req.city or existing_vendor.city
+    existing_vendor.pin_code = vendor_req.pincode or existing_vendor.pin_code
+    existing_vendor.contact_number = vendor_req.contact_no or existing_vendor.contact_number
+
+    existing_vendor = update_vendor(session=session, vendor=existing_vendor)
 
     return JSONResponse(
         status_code=status.HTTP_200_OK,
-        content=vendor.to_vendor_res(updated_vendor)
+        content=vendor.to_vendor_res(existing_vendor)
     )
