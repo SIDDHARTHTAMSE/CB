@@ -1,12 +1,18 @@
 from pydantic import BaseModel
 
 from app.models import Students
+from typing import Optional
 
 
 class CreateStudent(BaseModel):
     student_first_name: str
     student_last_name: str
     student_usn: str
+
+
+class UpdateStudent(BaseModel):
+    student_first_name: Optional[str] = None
+    student_last_name: Optional[str] = None
 
 
 class CreateStudentRes(BaseModel):
