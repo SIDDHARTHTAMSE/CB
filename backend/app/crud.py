@@ -112,20 +112,8 @@ def create_student(session: Session, student: Students):
 
 def update_student(
         session: Session,
-        student_id: UUID,
-        student_first_name: str,
-        student_last_name: str,
-        student_usn: str
+        student: Students
 ):
-    student = session.get(Students, student_id)
-
-    if student is None:
-        return None
-
-    student.student_first_name = student_first_name
-    student.student_last_name = student_last_name
-    student.student_usn = student_usn
-
     session.add(student)
     session.commit()
     session.refresh(student)
