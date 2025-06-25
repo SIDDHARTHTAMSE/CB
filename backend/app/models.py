@@ -155,3 +155,11 @@ class VendorForm(SQLModel, table=True):
 class College(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     students: str = Field(nullable=True)
+
+
+class AdharCard(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    adhar_no: str = Field(nullable=False, unique=True)
+    first_name: str = Field(nullable=False)
+    last_name: str = Field(nullable=False)
+    gender: str = Field(nullable=False)

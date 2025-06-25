@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 from uuid import UUID
 
 from app.core.security import get_password_hash, verify_password
-from app.models import Item, ItemCreate, User, UserCreate, UserUpdate, Vendor, Students, SignIn, VendorForm
+from app.models import Item, ItemCreate, User, UserCreate, UserUpdate, Vendor, Students, SignIn, VendorForm, AdharCard
 
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
@@ -137,3 +137,35 @@ def create_vendor_form(session: Session, vendor_form: VendorForm):
     session.commit()
     session.refresh(vendor_form)
     return vendor_form
+
+
+def get_adhar(session: Session):
+    return session.exec(select(AdharCard)).all()
+
+
+def get_adhar_by_no(*, session: Session, number: str) -> AdharCard | None:
+    query = select(AdharCard).where(AdharCard.adhar_no == number)
+    adhar = session.exec(query).one_or_none()
+    return adhar
+
+
+def createAdhar(session: Session, adhar: AdharCard):
+    session.add(adhar)
+    session.commit()
+    session.refresh(adhar)
+    return adhar
+
+
+def update_adhar(session: Session, adhar: AdharCard):
+    session.add(adhar)
+    session.commit()
+    session.refresh(adhar)
+    return adhar
+
+
+def delete_adhar(session: Session, adhar: AdharCard):
+    session.delete(adhar)
+    session.commit()
+
+
+
