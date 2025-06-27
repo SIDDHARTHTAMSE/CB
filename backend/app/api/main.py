@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.routes import items, login, users, utils, vendor, student, signin, vendor_form, adhar
+from app.api.routes import items, login, users, utils, vendor, student, signin, vendor_form, adhar, user
 
 
 api_router = APIRouter()
@@ -13,3 +13,4 @@ api_router.include_router(student.router, prefix="/students", tags=["students"])
 api_router.include_router(signin.router, prefix="/signin", tags=["signin"])
 api_router.include_router(vendor_form.router, prefix="/vendor_form", tags=["vendor_form"])
 api_router.include_router(adhar.router, prefix="/aadhar", tags=["aadhar"])
+api_router.include_router(user.router, prefix="/register", tags=["register"])

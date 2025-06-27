@@ -163,3 +163,14 @@ class AdharCard(SQLModel, table=True):
     first_name: str = Field(nullable=False)
     last_name: str = Field(nullable=False)
     gender: str = Field(nullable=False)
+
+
+class Register(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    first_name: str = Field(nullable=False, min_length=2, max_length=20)
+    last_name: str = Field(nullable=False, min_length=2, max_length=20)
+    email: EmailStr = Field(nullable=False, unique=True)
+    password: str = Field(nullable=False, min_length=4, max_length=20)
+    phone_number: str = Field(nullable=False, unique=True, min_length=10, max_length=10)
+    date_of_birth: str = Field(nullable=True, default=None)
+    gender: str = Field(nullable=True)
