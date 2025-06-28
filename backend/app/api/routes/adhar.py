@@ -37,3 +37,16 @@ def create_new_adhar(session: SessionDep, adhar_req: CreateAdhar):
 def get_adhar_details(session: SessionDep):
     adhar = get_adhar(session=session)
     return [is_adhar_res(s) for s in adhar]
+
+
+@router.get("{adhar_no}", response_model=CreateAdharRes)
+def get_all_adhar_by_no(session: SessionDep, adhar_no: str):
+    existing_adhar = get_adhar_by_no(session=session, number=adhar_no)
+
+    if not existing_adhar:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Adhar number is not found"
+        )
+    return is_adhar_res(existing_adhar)
+
