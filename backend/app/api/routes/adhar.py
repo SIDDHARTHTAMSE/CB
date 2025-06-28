@@ -31,3 +31,9 @@ def create_new_adhar(session: SessionDep, adhar_req: CreateAdhar):
         status_code=status.HTTP_201_CREATED,
         content=is_adhar_res(adhar)
     )
+
+
+@router.get("/", response_model=List[CreateAdharRes])
+def get_adhar_details(session: SessionDep):
+    adhar = get_adhar(session=session)
+    return [is_adhar_res(s) for s in adhar]
