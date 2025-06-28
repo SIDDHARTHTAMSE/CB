@@ -64,3 +64,24 @@ def delete_adhar_by_no(session: SessionDep, adhar_no: str):
     return JSONResponse(
         content="Adhar number is deleted successfully"
     )
+
+
+@router.put("{adhar_no}", response_model=CreateAdharRes)
+def update_adhar_by_no(session: SessionDep, adhar_no: str, adhar_req: UpdateAdhar):
+    existing_adhar = get_adhar_by_no(session=session, number=adhar_no)
+
+    if not existing_adhar:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Adhar number is not found"
+        )
+
+    existing_adhar.first_name = adhar_req.first_name or existing_adhar.first_name
+    existing_adhar.last_name = adhar_req.last_name or existing_adhar.last_name
+    existing_adhar.gender = adhar_req.gender or existing_adhar.gender
+
+    existing_adhar = update_adhar(session=session, adhar=existing_adhar)
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=is_adhar_res(existing_adhar)
+    )
