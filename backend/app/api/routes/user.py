@@ -44,3 +44,9 @@ def create_new_users(session: SessionDep, user_req: user.CreateUsers):
         status_code=status.HTTP_201_CREATED,
         content=user.to_users_res(new_users)
     )
+
+
+@router.get("/", response_model=List[user.CreateUsersRes])
+def get_users_details(session: SessionDep):
+    users = get_all_users(session=session)
+    return [user.to_users_res(s) for s in users]
