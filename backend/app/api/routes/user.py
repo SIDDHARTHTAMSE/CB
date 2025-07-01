@@ -50,3 +50,15 @@ def create_new_users(session: SessionDep, user_req: user.CreateUsers):
 def get_users_details(session: SessionDep):
     users = get_all_users(session=session)
     return [user.to_users_res(s) for s in users]
+
+
+@router.get("{email_id}", response_model=user.CreateUsersRes)
+def get_all_users_by_email(session: SessionDep, email_id: str):
+    existing_email = get_users_by_email(session=session, email=email_id)
+
+    if not existing_email:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Users email id not found"
+        )
+    return user.to_users_res(existing_email)
