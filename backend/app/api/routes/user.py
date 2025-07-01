@@ -62,3 +62,18 @@ def get_all_users_by_email(session: SessionDep, email_id: str):
             detail="Users email id not found"
         )
     return user.to_users_res(existing_email)
+
+
+@router.delete("{email_id}")
+def delete_users_by_email(session: SessionDep, email_id: str):
+    existing_email = get_users_by_email(session=session, email=email_id)
+
+    if not existing_email:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User email id is not found"
+        )
+    delete_users(session=session, users=existing_email)
+    return JSONResponse(
+        content="User deleted successfully"
+    )
