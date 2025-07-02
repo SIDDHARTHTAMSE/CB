@@ -16,7 +16,6 @@ class CreateUsers(BaseModel):
 class UpdateUser(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
-    email: Optional[str] = None
     password: Optional[str] = None
     phone_number: Optional[str] = None
     date_of_birth: Optional[str] = None

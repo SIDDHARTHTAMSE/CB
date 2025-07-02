@@ -77,3 +77,29 @@ def delete_users_by_email(session: SessionDep, email_id: str):
     return JSONResponse(
         content="User deleted successfully"
     )
+
+
+@router.put("{email_id}", response_model=user.CreateUsersRes)
+def update_user_by_email(
+        session: SessionDep,
+        email_id: str,
+        user_req: user.UpdateUser
+):
+    existing_users = get_users_by_email(session=session, email=email_id)
+    if not existing_users:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+
+    existing_users.first_name = user_req.first_name or existing_users.first_name
+    existing_users.last_name = user_req.last_name or existing_users.last_name
+    existing_users.password = user_req.password or existing_users.password
+    existing_users.date_of_birth = user_req.date_of_birth or existing_users.date_of_birth
+    existing_users.gender = user_req.gender or existing_users.gender
+
+    existing_users = update_users(session=session, users=existing_users)
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=user.to_users_res(existing_users)
+    )
