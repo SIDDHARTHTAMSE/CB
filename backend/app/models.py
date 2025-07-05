@@ -179,6 +179,8 @@ class Register(SQLModel, table=True):
 
     instructor: Optional["Instructor"] = Relationship(back_populates="register")
 
+    bank_details: List["BankDetails"] = Relationship(back_populates="register")
+
 
 class Instructor(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
@@ -192,3 +194,16 @@ class Instructor(SQLModel, table=True):
     register_id: uuid.UUID = Field(foreign_key="register.id", nullable=False)
 
     register: Optional[Register] = Relationship(back_populates="instructor")
+
+
+class BankDetails(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    bank_name: str = Field(nullable=False)
+    account_holder_name: str = Field(nullable=False)
+    upi_id: str = Field(nullable=False, unique=True)
+    account_no: str = Field(nullable=False, unique=True)
+    ifsc_code: str = Field(nullable=False, unique=True)
+
+    register_id: uuid.UUID = Field(foreign_key="register.id", nullable=False)
+
+    register: Optional[Register] = Relationship(back_populates="bank_details")
