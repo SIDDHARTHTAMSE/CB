@@ -1,7 +1,9 @@
+import datetime
 import uuid
 
 from pydantic import EmailStr
 from sqlmodel import Field, Relationship, SQLModel
+from typing import List, Optional
 
 
 # Shared properties
@@ -174,3 +176,19 @@ class Register(SQLModel, table=True):
     phone_number: str = Field(nullable=False, unique=True, min_length=10, max_length=10)
     date_of_birth: str = Field(nullable=True, default=None)
     gender: str = Field(nullable=True)
+
+    instructor: Optional["Instructor"] = Relationship(back_populates="register")
+
+
+class Instructor(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    language: str = Field(nullable=False)
+    bio: str = Field(nullable=False)
+    verification_status: str = Field(nullable=False)
+    verification_id: str = Field(nullable=False, unique=True)
+    remarks: str
+    verify_on: datetime.date = Field(default_factory=datetime.date.today)
+
+    register_id: uuid.UUID = Field(foreign_key="register.id", nullable=False)
+
+    register: Optional[Register] = Relationship(back_populates="instructor")

@@ -5,7 +5,20 @@ from sqlmodel import Session, select
 from uuid import UUID
 
 from app.core.security import get_password_hash, verify_password
-from app.models import Item, ItemCreate, User, UserCreate, UserUpdate, Vendor, Students, SignIn, VendorForm, AdharCard, Register
+from app.models import (
+    Item,
+    ItemCreate,
+    User,
+    UserCreate,
+    UserUpdate,
+    Vendor,
+    Students,
+    SignIn,
+    VendorForm,
+    AdharCard,
+    Register,
+    Instructor
+)
 
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
@@ -54,6 +67,8 @@ def create_item(*, session: Session, item_in: ItemCreate, owner_id: uuid.UUID) -
     session.refresh(db_item)
     return db_item
 
+# vendor CRUD
+
 
 def get_vendors(session: Session):
     return session.exec(select(Vendor)).all()
@@ -86,6 +101,9 @@ def update_vendor(
 def delete_by_vendor(session: Session, vendor: Vendor):
     session.delete(vendor)
     session.commit()
+
+
+# student CRUD
 
 
 def get_student(session: Session):
@@ -124,6 +142,8 @@ def delete_student(session: Session, student: Students):
     session.delete(student)
     session.commit()
 
+# signin
+
 
 def create_signin(session: Session, signin: SignIn):
     session.add(signin)
@@ -132,11 +152,16 @@ def create_signin(session: Session, signin: SignIn):
     return signin
 
 
+# vendor form
+
+
 def create_vendor_form(session: Session, vendor_form: VendorForm):
     session.add(vendor_form)
     session.commit()
     session.refresh(vendor_form)
     return vendor_form
+
+# aadhar CRUD
 
 
 def get_adhar(session: Session):
@@ -166,6 +191,9 @@ def update_adhar(session: Session, adhar: AdharCard):
 def delete_adhar(session: Session, adhar: AdharCard):
     session.delete(adhar)
     session.commit()
+
+
+# users CRUD
 
 
 def get_all_users(session: Session):
@@ -202,3 +230,33 @@ def delete_users(session: Session, users: Register):
     session.delete(users)
     session.commit()
 
+# instructor CRUD
+
+
+def get_all_instructor(session: Session):
+    return session.exec(select(Instructor)).all()
+
+
+def get_instructor_by_user_id(session: Session, user_id: str) -> Instructor | None:
+    query = select(Instructor).where(Instructor.register_id == user_id)
+    instructor = session.exec(query).one_or_none()
+    return instructor
+
+
+def create_instructor(session: Session, instructor: Instructor):
+    session.add(instructor)
+    session.commit()
+    session.refresh(instructor)
+    return instructor
+
+
+def update_instructor(session: Session, instructor: Instructor):
+    session.add(instructor)
+    session.commit()
+    session.refresh(instructor)
+    return instructor
+
+
+def delete_instructor(session: Session, instructor: Instructor):
+    session.delete(instructor)
+    session.commit()
