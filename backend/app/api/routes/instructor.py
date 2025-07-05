@@ -67,3 +67,37 @@ def delete_instructor_by_register_id(session: SessionDep, instructor_id: UUID):
     return JSONResponse(
         content="Instructor deleted successfully"
     )
+
+
+@router.put("{instructor_id}", response_model=instructor.CreateInstructorResponse)
+def update_instructor_using_id(
+        session: SessionDep,
+        instructor_id: UUID,
+        instructor_req: instructor.UpdateInstructor
+):
+    existing_instructor = get_instructor_by_id(session=session, instructor_id=instructor_id)
+
+    if not existing_instructor:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Instructor not found"
+        )
+
+    existing_register = get_instructor_by_user_id(session=session, user_id=instructor_req.register_id)
+
+    if not existing_register:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Register id not found"
+        )
+
+    existing_instructor.register_id = instructor_req.register_id or existing_instructor.register_id
+    existing_instructor.language = instructor_req.language or existing_instructor.language
+    existing_instructor.bio = instructor_req.bio or existing_instructor.bio
+    existing_instructor.verification_status = instructor_req.verification_status or existing_instructor.verification_status
+    existing_instructor.verification_id = instructor_req.verification_id or existing_instructor.verification_id
+    existing_instructor.verify_on = instructor_req.verify_on or existing_instructor.verify_on
+    existing_instructor.remarks = instructor_req.remarks or existing_instructor.verify_on
+
+    existing_instructor = update_instructor(session=session, instructor=existing_instructor)
+    return instructor.to_instructor_res(existing_instructor)

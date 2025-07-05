@@ -20,6 +20,7 @@ class CreateInstructorResponse(CreateInstructor):
 
 
 class UpdateInstructor(BaseModel):
+    register_id: Optional[UUID] = None
     language: Optional[str] = None
     bio: Optional[str] = None
     verification_status: Optional[str] = None
