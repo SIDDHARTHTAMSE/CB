@@ -5,6 +5,7 @@ from app.api.deps import SessionDep
 from app.crud import get_all_instructor, get_instructor_by_user_id, create_instructor, update_instructor, delete_instructor
 from app.models import Instructor
 from app.schemas import instructor
+from uuid import UUID
 
 router = APIRouter()
 
@@ -39,3 +40,15 @@ def create_new_instructor(session: SessionDep, instructor_req: instructor.Create
 def get_all_instructors(session: SessionDep):
     instructors = get_all_instructor(session=session)
     return [instructor.to_instructor_res(s) for s in instructors]
+
+
+@router.get("{register_id}", response_model=instructor.CreateInstructorResponse)
+def get_instructors_by_register_id(session: SessionDep, register_id: UUID):
+    existing_instructors = get_instructor_by_user_id(session=session, user_id=register_id)
+
+    if not existing_instructors:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Instructor using register id not found"
+        )
+    return instructor.to_instructor_res(existing_instructors)
