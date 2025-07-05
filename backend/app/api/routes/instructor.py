@@ -33,3 +33,9 @@ def create_new_instructor(session: SessionDep, instructor_req: instructor.Create
 
     new_instructor = create_instructor(session=session, instructor=new_instructor)
     return instructor.to_instructor_res(new_instructor)
+
+
+@router.get("/", response_model=List[instructor.CreateInstructorResponse])
+def get_all_instructors(session: SessionDep):
+    instructors = get_all_instructor(session=session)
+    return [instructor.to_instructor_res(s) for s in instructors]

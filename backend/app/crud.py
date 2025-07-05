@@ -237,7 +237,7 @@ def get_all_instructor(session: Session):
     return session.exec(select(Instructor)).all()
 
 
-def get_instructor_by_user_id(session: Session, user_id: str) -> Instructor | None:
+def get_instructor_by_user_id(session: Session, user_id: UUID) -> Instructor | None:
     query = select(Instructor).where(Instructor.register_id == user_id)
     instructor = session.exec(query).one_or_none()
     return instructor
