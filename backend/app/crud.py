@@ -243,6 +243,12 @@ def get_instructor_by_user_id(session: Session, user_id: UUID) -> Instructor | N
     return instructor
 
 
+def get_instructor_by_id(session: Session, instructor_id: UUID) -> Instructor | None:
+    query = select(Instructor).where(Instructor.id == instructor_id)
+    instructor = session.exec(query).one_or_none()
+    return instructor
+
+
 def create_instructor(session: Session, instructor: Instructor):
     session.add(instructor)
     session.commit()

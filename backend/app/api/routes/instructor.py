@@ -2,7 +2,7 @@ from typing import List
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 from app.api.deps import SessionDep
-from app.crud import get_all_instructor, get_instructor_by_user_id, create_instructor, update_instructor, delete_instructor
+from app.crud import get_all_instructor, get_instructor_by_user_id, create_instructor, update_instructor, delete_instructor, get_instructor_by_id
 from app.models import Instructor
 from app.schemas import instructor
 from uuid import UUID
@@ -52,3 +52,18 @@ def get_instructors_by_register_id(session: SessionDep, register_id: UUID):
             detail="Instructor using register id not found"
         )
     return instructor.to_instructor_res(existing_instructors)
+
+
+@router.delete("{instructor_id}", response_model=instructor.CreateInstructorResponse)
+def delete_instructor_by_register_id(session: SessionDep, instructor_id: UUID):
+    existing_instructor = get_instructor_by_id(session=session, instructor_id=instructor_id)
+
+    if not existing_instructor:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Instructor is not found"
+        )
+    delete_instructor(session=session, instructor=existing_instructor)
+    return JSONResponse(
+        content="Instructor deleted successfully"
+    )
