@@ -17,7 +17,8 @@ from app.models import (
     VendorForm,
     AdharCard,
     Register,
-    Instructor
+    Instructor,
+    BankDetails
 )
 
 
@@ -206,6 +207,12 @@ def get_users_by_email(session: Session, email: str) -> Register | None:
     return users
 
 
+def get_register_id(session: Session, register_id: UUID) -> Register | None:
+    query = select(Register).where(Register.id == register_id)
+    users = session.exec(query).one_or_none()
+    return users
+
+
 def get_users_by_phone(session: Session, number: str) -> Register | None:
     query = select(Register).where(Register.phone_number == number)
     users = session.exec(query).one_or_none()
@@ -265,4 +272,47 @@ def update_instructor(session: Session, instructor: Instructor):
 
 def delete_instructor(session: Session, instructor: Instructor):
     session.delete(instructor)
+    session.commit()
+
+
+# bank details CRUD
+
+def get_all_bankdetails(session: Session):
+    return session.exec(select(BankDetails)).all()
+
+
+def get_bank_user_by_account(session: Session, account_no: str):
+    query = select(BankDetails).where(BankDetails.account_no == account_no)
+    bank_user = session.exec(query).one_or_none()
+    return bank_user
+
+
+def get_ifsc_code(session: Session, ifsc: str):
+    query = select(BankDetails).where(BankDetails.ifsc_code == ifsc)
+    bank_user = session.exec(query).one_or_none()
+    return bank_user
+
+
+def get_upi(session: Session, upi: str):
+    query = select(BankDetails).where(BankDetails.upi_id == upi)
+    bank_user = session.exec(query).one_or_none()
+    return bank_user
+
+
+def create_bank_user(session: Session, bank_user: BankDetails):
+    session.add(bank_user)
+    session.commit()
+    session.refresh(bank_user)
+    return bank_user
+
+
+def update_bank_user(session: Session, bank_user: BankDetails):
+    session.add(bank_user)
+    session.commit()
+    session.refresh(bank_user)
+    return bank_user
+
+
+def delete_bank_user(session: Session, bank_user: BankDetails):
+    session.delete(bank_user)
     session.commit()
