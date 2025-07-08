@@ -70,3 +70,18 @@ def create_new_bank_user(session: SessionDep, user_req: bank_details.CreateBankD
 def get_all_bank_users(session: SessionDep):
     get_bank_users = get_all_bankdetails(session=session)
     return [bank_details.to_bank_details_res(s) for s in get_bank_users]
+
+
+@router.get("{account_no}", response_model=bank_details.CreateBankDetailsRes)
+def get_bank_user_by_account_no(session: SessionDep, account_no: str):
+    existing_account = get_bank_user_by_account(
+        session=session,
+        account_no=account_no
+    )
+
+    if not existing_account:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User with account number not found"
+        )
+    return bank_details.to_bank_details_res(existing_account)
