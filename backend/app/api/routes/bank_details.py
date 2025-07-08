@@ -64,3 +64,9 @@ def create_new_bank_user(session: SessionDep, user_req: bank_details.CreateBankD
         session=session, bank_user=new_user
     )
     return bank_details.to_bank_details_res(new_user)
+
+
+@router.get("/", response_model=List[bank_details.CreateBankDetailsRes])
+def get_all_bank_users(session: SessionDep):
+    get_bank_users = get_all_bankdetails(session=session)
+    return [bank_details.to_bank_details_res(s) for s in get_bank_users]
