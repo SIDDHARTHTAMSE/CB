@@ -108,3 +108,17 @@ def update_bank_user_by_account_no(
 
     update_user = update_bank_user(session=session, bank_user=existing_account)
     return bank_details.to_bank_details_res(update_user)
+
+
+@router.delete("{account_no}", response_model=bank_details.CreateBankDetailsRes)
+def delete_bank_user_by_account_no(session: SessionDep, account_no: str):
+    existing_bank_user = get_bank_user_by_account(session=session, account_no=account_no)
+    if not existing_bank_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User with account number is not found"
+        )
+    delete_bank_user(session=session, bank_user=existing_bank_user)
+    return JSONResponse(
+        content="User deleted successfully"
+    )
