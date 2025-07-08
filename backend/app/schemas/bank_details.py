@@ -17,7 +17,7 @@ class CreateBankDetailsRes(CreateBankDetails):
     pass
 
 
-class UpdateDetails(BaseModel):
+class UpdateBankDetails(BaseModel):
     register_id: Optional[UUID] = None
     bank_name: Optional[str] = Field(default=None, example="HDFC BANK")
     account_holder_name: Optional[str] = Field(default=None, example="Siddharth Tamse")
