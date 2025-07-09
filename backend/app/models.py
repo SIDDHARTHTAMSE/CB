@@ -4,6 +4,7 @@ import uuid
 from pydantic import EmailStr
 from sqlmodel import Field, Relationship, SQLModel
 from typing import List, Optional
+from datetime import datetime, date
 
 
 # Shared properties
@@ -189,11 +190,13 @@ class Instructor(SQLModel, table=True):
     verification_status: str = Field(nullable=False)
     verification_id: str = Field(nullable=False, unique=True)
     remarks: str
-    verify_on: datetime.date = Field(default_factory=datetime.date.today)
+    verify_on: date = Field(default_factory=date.today)
 
     register_id: uuid.UUID = Field(foreign_key="register.id", nullable=False)
 
     register: Optional[Register] = Relationship(back_populates="instructor")
+
+    experience: List["Experience"] = Relationship(back_populates="instructor")
 
 
 class BankDetails(SQLModel, table=True):
@@ -207,3 +210,18 @@ class BankDetails(SQLModel, table=True):
     register_id: uuid.UUID = Field(foreign_key="register.id", nullable=False)
 
     register: Optional[Register] = Relationship(back_populates="bank_details")
+
+
+class Experience(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    position: str = Field(nullable=False)
+    company_name: str = Field(nullable=False)
+    time_period: date = Field(default_factory=date.today)
+    description: str = Field(nullable=False, min_length=5, max_length=50)
+    verification_status: str = Field(nullable=False)
+    remarks: str = Field(default=None, max_length=300)
+    verified_on: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
+    instructor_id: uuid.UUID = Field(foreign_key="instructor.id", nullable=False)
+
+    instructor: Optional[Instructor] = Relationship(back_populates="experience")
