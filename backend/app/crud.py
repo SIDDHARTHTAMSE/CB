@@ -18,7 +18,8 @@ from app.models import (
     AdharCard,
     Register,
     Instructor,
-    BankDetails
+    BankDetails,
+    Experience
 )
 
 
@@ -315,4 +316,41 @@ def update_bank_user(session: Session, bank_user: BankDetails):
 
 def delete_bank_user(session: Session, bank_user: BankDetails):
     session.delete(bank_user)
+    session.commit()
+
+
+# experience CRUD
+
+def get_all_experience(session: Session):
+    return session.exec(select(Experience)).all()
+
+
+def get_experience_by_id(session: Session, experience_id: UUID) -> Experience | None:
+    query = select(Experience).where(Experience.id == experience_id)
+    experience = session.exec(query).one_or_none()
+    return experience
+
+
+def get_instructor_using_id(session: Session, instructors_id: UUID) -> Instructor | None:
+    query = select(Instructor).where(Instructor.id == instructors_id)
+    instructor = session.exec(query).one_or_none()
+    return instructor
+
+
+def create_experience(session: Session, experience: Experience):
+    session.add(experience)
+    session.commit()
+    session.refresh(experience)
+    return experience
+
+
+def update_experience(session: Session, experience: Experience):
+    session.add(experience)
+    session.commit()
+    session.refresh(experience)
+    return experience
+
+
+def delete_experience(session: Session, experience: Experience):
+    session.delete(experience)
     session.commit()
