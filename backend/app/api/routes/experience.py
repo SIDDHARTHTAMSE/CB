@@ -81,3 +81,36 @@ def delete_experience_user(session: SessionDep, experience_user_id: UUID):
     return JSONResponse(
         content="Experience user deleted successfully"
     )
+
+
+@router.put("/{experience_id}", response_model=experience.CreateExperienceRes)
+def update_experience_by_id(
+        session: SessionDep,
+        experience_id: UUID,
+        user_req: experience.UpdateExperience
+):
+    existing_instructor = get_instructor_by_id(session=session, instructor_id=user_req.instructor_id)
+    if not existing_instructor:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Please enter correct instructor id"
+        )
+
+    existing_experience_id = get_experience_using_id(session=session, user_id=experience_id)
+
+    if not existing_experience_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Experience user not found"
+        )
+    existing_experience_id.instructor_id = user_req.instructor_id or existing_experience_id.instructor_id
+    existing_experience_id.position = user_req.position or existing_experience_id.position
+    existing_experience_id.company_name = user_req.company_name or existing_experience_id.company_name
+    existing_experience_id.time_period = user_req.time_period or existing_experience_id.time_period
+    existing_experience_id.description = user_req.description or existing_experience_id.description
+    existing_experience_id.verification_status = user_req.verification_status or existing_experience_id.verification_status
+    existing_experience_id.remarks = user_req.remarks or existing_experience_id.remarks
+    existing_experience_id.verified_on = user_req.verified_on or existing_experience_id.verified_on
+
+    updated_experience = update_experience(session=session, experience=existing_experience_id)
+    return experience.to_experience_res(updated_experience)
