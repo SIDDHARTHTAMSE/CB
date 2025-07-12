@@ -42,3 +42,9 @@ def create_new_experience(session: SessionDep, user_req: experience.CreateExperi
     new_experience = create_experience(session=session, experience=new_experience)
     return experience.to_experience_res(new_experience)
 
+
+@router.get("/", response_model=List[experience.CreateExperienceRes])
+def get_all_experience_users(session: SessionDep):
+    get_all_users = get_all_experience(session=session)
+    return [experience.to_experience_res(s) for s in get_all_users]
+
