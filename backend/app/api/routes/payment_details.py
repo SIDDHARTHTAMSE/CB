@@ -44,3 +44,9 @@ def create_new_payment_details(session: SessionDep, user_req: payment_details.Cr
 
     new_payment_details = create_payment_details(session=session, payment_details=new_payment_details)
     return payment_details.to_payment_detail_res(new_payment_details)
+
+
+@router.get('/', response_model=List[payment_details.CreatePaymentMethodRes])
+def get_all_payment_detail(session: SessionDep):
+    get_payment_details = get_all_payment_details(session=session)
+    return [payment_details.to_payment_detail_res(s) for s in get_payment_details]
