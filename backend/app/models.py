@@ -198,6 +198,8 @@ class Instructor(SQLModel, table=True):
 
     experience: List["Experience"] = Relationship(back_populates="instructor")
 
+    payment_details: List["PaymentDetails"] = Relationship(back_populates="instructor")
+
 
 class BankDetails(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
@@ -225,3 +227,17 @@ class Experience(SQLModel, table=True):
     instructor_id: uuid.UUID = Field(foreign_key="instructor.id", nullable=False)
 
     instructor: Optional[Instructor] = Relationship(back_populates="experience")
+
+
+class PaymentDetails(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    status: str = Field(default="pending", nullable=False)
+    amount: str = Field(nullable=False)
+    payment_date: datetime = Field(default_factory=datetime.utcnow)
+    payment_method: str = Field(default="cash", nullable=False)
+    reference_number: Optional[str] = Field(default=None, unique=True)
+    currency: Optional[str] = Field(default="INR", nullable=False)
+
+    instructor_id: uuid.UUID = Field(foreign_key="instructor.id", nullable=False)
+
+    instructor: Optional[Instructor] = Relationship(back_populates="payment_details")
