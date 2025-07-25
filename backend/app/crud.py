@@ -19,7 +19,8 @@ from app.models import (
     Register,
     Instructor,
     BankDetails,
-    Experience
+    Experience,
+    PaymentDetails
 )
 
 
@@ -347,4 +348,40 @@ def update_experience(session: Session, experience: Experience):
 
 def delete_experience(session: Session, experience: Experience):
     session.delete(experience)
+    session.commit()
+
+
+# payment details CRUD
+def get_all_payment_details(session: Session):
+    return session.exec(select(PaymentDetails)).all()
+
+
+def get_payment_detail_by_id(session: Session, payment_id: UUID) -> PaymentDetails | None:
+    query = select(PaymentDetails).where(PaymentDetails.id == payment_id)
+    payment = session.exec(query).one_or_none()
+    return payment
+
+
+def get_reference_number(session: Session, ref_no: str):
+    query = select(PaymentDetails).where(PaymentDetails.reference_number == ref_no)
+    reference_number = session.exec(query).one_or_none()
+    return reference_number
+
+
+def create_payment_details(session: Session, payment_details: PaymentDetails):
+    session.add(payment_details)
+    session.commit()
+    session.refresh(payment_details)
+    return payment_details
+
+
+def update_payment_details(session: Session, payment_details: PaymentDetails):
+    session.add(payment_details)
+    session.commit()
+    session.refresh(payment_details)
+    return payment_details
+
+
+def delete_payment_details(session: Session, payment_details: PaymentDetails):
+    session.delete(payment_details)
     session.commit()
