@@ -25,7 +25,6 @@ class UpdatePaymentMethod(BaseModel):
     amount: Optional[str] = None
     payment_date: Optional[date] = None
     payment_method: Optional[str] = None
-    reference_number: Optional[str] = None
     currency: Optional[str] = None
 
 
