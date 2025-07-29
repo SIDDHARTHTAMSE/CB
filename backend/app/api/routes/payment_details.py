@@ -50,3 +50,18 @@ def create_new_payment_details(session: SessionDep, user_req: payment_details.Cr
 def get_all_payment_detail(session: SessionDep):
     get_payment_details = get_all_payment_details(session=session)
     return [payment_details.to_payment_detail_res(s) for s in get_payment_details]
+
+
+@router.get("{reference_number}", response_model=payment_details.CreatePaymentMethodRes)
+def get_payment_detail_by_reference_number(session: SessionDep, reference_number: str):
+    existing_reference_number = get_reference_number(
+        session=session,
+        ref_no=reference_number
+    )
+
+    if not existing_reference_number:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Payment details is not found"
+        )
+    return payment_details.to_payment_detail_res(existing_reference_number)
