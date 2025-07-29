@@ -102,3 +102,20 @@ def update_payment_details_by_reference_number(
 
     new_payment_details = update_payment_details(session=session, payment_details= existing_payment_details)
     return payment_details.to_payment_detail_res(new_payment_details)
+
+
+@router.delete("{reference_number}", response_model=payment_details.CreatePaymentMethodRes)
+def delete_payment_details_by_reference_number(session: SessionDep, reference_number: str):
+    existing_reference_number = get_reference_number(
+        session=session,
+        ref_no=reference_number
+    )
+    if not existing_reference_number:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Reference number is not found"
+        )
+    delete_payment_details(session=session, payment_details=existing_reference_number)
+    return JSONResponse(
+        content="Reference number is deleted successfully"
+    )
