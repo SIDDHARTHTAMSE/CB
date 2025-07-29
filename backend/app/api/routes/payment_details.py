@@ -62,6 +62,43 @@ def get_payment_detail_by_reference_number(session: SessionDep, reference_number
     if not existing_reference_number:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Payment details is not found"
+            detail="Reference number is not found"
         )
     return payment_details.to_payment_detail_res(existing_reference_number)
+
+
+@router.put("{reference_number}", response_model=payment_details.CreatePaymentMethodRes)
+def update_payment_details_by_reference_number(
+        session: SessionDep,
+        reference_number: str,
+        user_req: payment_details.UpdatePaymentMethod
+):
+    existing_payment_details = get_reference_number(
+        session=session,
+        ref_no=reference_number
+    )
+
+    if not existing_payment_details:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Reference number is not found"
+        )
+
+    existing_instructor_by_id = get_instructor_by_id(
+        session=session, instructor_id=user_req.instructor_id
+    )
+    if not existing_instructor_by_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Instructor is not found"
+        )
+
+    existing_payment_details.instructor_id = user_req.instructor_id or existing_payment_details.instructor_id
+    existing_payment_details.status = user_req.status or existing_payment_details.status
+    existing_payment_details.amount = user_req.amount or existing_payment_details.amount
+    existing_payment_details.payment_date = user_req.payment_date or existing_payment_details.payment_date
+    existing_payment_details.payment_method = user_req.payment_method or existing_payment_details.payment_method
+    existing_payment_details.currency = user_req.currency or existing_payment_details.currency
+
+    new_payment_details = update_payment_details(session=session, payment_details= existing_payment_details)
+    return payment_details.to_payment_detail_res(new_payment_details)
