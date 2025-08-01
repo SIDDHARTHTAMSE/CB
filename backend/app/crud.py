@@ -20,7 +20,8 @@ from app.models import (
     Instructor,
     BankDetails,
     Experience,
-    PaymentDetails
+    PaymentDetails,
+    Qualification
 )
 
 
@@ -384,4 +385,34 @@ def update_payment_details(session: Session, payment_details: PaymentDetails):
 
 def delete_payment_details(session: Session, payment_details: PaymentDetails):
     session.delete(payment_details)
+    session.commit()
+
+
+# qualification CRUD
+def get_all_qualification(session: Session):
+    return session.exec(select(Qualification)).all()
+
+
+def get_qualification_by_id(session: Session, qualification_id: UUID) -> Qualification | None:
+    query = select(Qualification).where(Qualification.id == qualification_id)
+    qualification = session.exec(query).one_or_none()
+    return qualification
+
+
+def create_qualification(session: Session, qualification: Qualification):
+    session.add(qualification)
+    session.commit()
+    session.refresh(qualification)
+    return qualification
+
+
+def update_qualification(session: Session, qualification: Qualification):
+    session.add(qualification)
+    session.commit()
+    session.refresh(qualification)
+    return qualification
+
+
+def delete_qualification(session: Session, qualification: Qualification):
+    session.delete(qualification)
     session.commit()
