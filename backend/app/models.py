@@ -200,6 +200,8 @@ class Instructor(SQLModel, table=True):
 
     payment_details: List["PaymentDetails"] = Relationship(back_populates="instructor")
 
+    qualification: List["Qualification"] = Relationship(back_populates="instructor")
+
 
 class BankDetails(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
@@ -241,3 +243,16 @@ class PaymentDetails(SQLModel, table=True):
     instructor_id: uuid.UUID = Field(foreign_key="instructor.id", nullable=False)
 
     instructor: Optional[Instructor] = Relationship(back_populates="payment_details")
+
+
+class Qualification(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    degree_type: str = Field(nullable=False)
+    specialization: str = Field(nullable=False)
+    time_period: datetime = Field(default_factory=datetime.utcnow)
+    verification_status: Optional[str] = Field(default="False", nullable=False)
+    verified_on: datetime = Field(default_factory=datetime.utcnow)
+
+    instructor_id: uuid.UUID = Field(foreign_key="instructor.id", nullable=False)
+
+    instructor: Optional[Instructor] = Relationship(back_populates="qualification")
