@@ -54,3 +54,34 @@ def get_qualification_by_qualification_id(session: SessionDep, qualification_id:
             detail="Qualification id is not found"
         )
     return qualification.to_qualification_res(existing_qualification)
+
+
+@router.put("{qualification_id}", response_model=qualification.CreateQualificationRes)
+def update_qualification_using_qualification_id(
+        session: SessionDep,
+        qualification_id: UUID,
+        user_req: qualification.UpdateQualification
+):
+    existing_qualification = get_qualification_by_id(session=session, qualification_id=qualification_id)
+    if not existing_qualification:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Qualification id is not found"
+        )
+
+    existing_instructor = get_instructor_by_id(session=session, instructor_id=user_req.instructor_id)
+    if not existing_instructor:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Instructor id is not found"
+        )
+
+    existing_qualification.instructor_id = user_req.instructor_id or existing_qualification.instructor_id
+    existing_qualification.degree_type = user_req.degree_type or existing_qualification.degree_type
+    existing_qualification.specialization = user_req.specialization or existing_qualification.specialization
+    existing_qualification.verified_on = user_req.verified_on or existing_qualification.verified_on
+    existing_qualification.time_period = user_req.time_period or existing_qualification.time_period
+    existing_qualification.verification_status = user_req.verification_status or existing_qualification.verification_status
+
+    updated_qualification = update_qualification(session=session, qualification=existing_qualification)
+    return qualification.to_qualification_res(updated_qualification)
