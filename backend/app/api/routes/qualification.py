@@ -33,3 +33,9 @@ def create_new_qualification(session: SessionDep, user_req: qualification.Create
 
     new_qualification = create_qualification(session=session, qualification=new_qualification)
     return qualification.to_qualification_res(new_qualification)
+
+
+@router.get("/", response_model=List[qualification.CreateQualificationRes])
+def get_all_new_qualification(session: SessionDep):
+    get_qualifications = get_all_qualification(session=session)
+    return [qualification.to_qualification_res(s) for s in get_qualifications]
