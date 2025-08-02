@@ -39,3 +39,18 @@ def create_new_qualification(session: SessionDep, user_req: qualification.Create
 def get_all_new_qualification(session: SessionDep):
     get_qualifications = get_all_qualification(session=session)
     return [qualification.to_qualification_res(s) for s in get_qualifications]
+
+
+@router.get("{qualification_id}", response_model=qualification.CreateQualificationRes)
+def get_qualification_by_qualification_id(session: SessionDep, qualification_id: UUID):
+    existing_qualification = get_qualification_by_id(
+        session=session,
+        qualification_id=qualification_id
+    )
+
+    if not existing_qualification:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Qualification id is not found"
+        )
+    return qualification.to_qualification_res(existing_qualification)
