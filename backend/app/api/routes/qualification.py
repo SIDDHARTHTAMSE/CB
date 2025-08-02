@@ -85,3 +85,18 @@ def update_qualification_using_qualification_id(
 
     updated_qualification = update_qualification(session=session, qualification=existing_qualification)
     return qualification.to_qualification_res(updated_qualification)
+
+
+@router.delete("{qualification_id}", response_model=qualification.CreateQualificationRes)
+def delete_qualification_using_qualification_id(session: SessionDep, qualification_id: UUID):
+    existing_qualification = get_qualification_by_id(session=session, qualification_id=qualification_id)
+    if not existing_qualification:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Qualification is not found"
+        )
+
+    delete_qualification(session=session, qualification=existing_qualification)
+    return JSONResponse(
+        content="Qualification deleted successfully"
+    )
