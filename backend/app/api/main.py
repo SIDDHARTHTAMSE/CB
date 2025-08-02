@@ -14,7 +14,8 @@ from app.api.routes import (
     instructor,
     bank_details,
     experience,
-    payment_details
+    payment_details,
+    qualification
 )
 
 
@@ -33,3 +34,4 @@ api_router.include_router(instructor.router, prefix="/instructor", tags=["instru
 api_router.include_router(bank_details.router, prefix="/bankdetails", tags=["bankdetails"])
 api_router.include_router(experience.router, prefix="/experience", tags=["experience"])
 api_router.include_router(payment_details.router, prefix="/payment_details", tags=["payment_details"])
+api_router.include_router(qualification.router, prefix="/qualification", tags=["qualification"])
