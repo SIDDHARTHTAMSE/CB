@@ -5,3 +5,8 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 .idea/*
+/.vs/CB/v17/.wsuo
+/.vs/CB/FileContentIndex/48e4a9fc-9df5-4c2f-8da2-60e1a641bcc2.vsidx
+/.vs/CB/v17/DocumentLayout.json
+/.vs/slnx.sqlite
+/.vs/VSWorkspaceState.json
