@@ -182,6 +182,8 @@ class Register(SQLModel, table=True):
 
     bank_details: List["BankDetails"] = Relationship(back_populates="register")
 
+    user_device: List["UserDevice"] = Relationship(back_populates="register")
+
 
 class Instructor(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
@@ -256,3 +258,15 @@ class Qualification(SQLModel, table=True):
     instructor_id: uuid.UUID = Field(foreign_key="instructor.id", nullable=False)
 
     instructor: Optional[Instructor] = Relationship(back_populates="qualification")
+
+
+class UserDevice(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    device_info: str = Field(nullable=False)
+    last_used: datetime = Field(default_factory=datetime.utcnow)
+    is_active: bool = False
+    location: str = Field(default=None)
+
+    register_id: uuid.UUID = Field(foreign_key="register.id", nullable=False)
+
+    register: Optional[Register] = Relationship(back_populates="user_device")
