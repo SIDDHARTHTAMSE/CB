@@ -21,7 +21,8 @@ from app.models import (
     BankDetails,
     Experience,
     PaymentDetails,
-    Qualification
+    Qualification,
+    UserDevice
 )
 
 
@@ -415,4 +416,34 @@ def update_qualification(session: Session, qualification: Qualification):
 
 def delete_qualification(session: Session, qualification: Qualification):
     session.delete(qualification)
+    session.commit()
+
+
+# user device CRUD
+def get_all_user_device(session: Session):
+    return session.exec(select(UserDevice)).all()
+
+
+def get_user_device_using_id(session: Session, user_id: UUID) -> UserDevice | None:
+    query = select(UserDevice).where(UserDevice.id == user_id)
+    user_device = session.exec(query).one_or_none()
+    return user_device
+
+
+def create_user_device(session: Session, user_device: UserDevice):
+    session.add(user_device)
+    session.commit()
+    session.refresh(user_device)
+    return user_device
+
+
+def update_user_device(session: Session, user_device: UserDevice):
+    session.add(user_device)
+    session.commit()
+    session.refresh(user_device)
+    return user_device
+
+
+def delete_user_device(session: Session, user_device: UserDevice):
+    session.delete(user_device)
     session.commit()
