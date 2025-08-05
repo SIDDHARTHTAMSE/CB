@@ -15,7 +15,8 @@ from app.api.routes import (
     bank_details,
     experience,
     payment_details,
-    qualification
+    qualification,
+    user_device
 )
 
 
@@ -35,3 +36,4 @@ api_router.include_router(bank_details.router, prefix="/bankdetails", tags=["ban
 api_router.include_router(experience.router, prefix="/experience", tags=["experience"])
 api_router.include_router(payment_details.router, prefix="/payment_details", tags=["payment_details"])
 api_router.include_router(qualification.router, prefix="/qualification", tags=["qualification"])
+api_router.include_router(user_device.router, prefix="/user_device", tags=["user_device"])
