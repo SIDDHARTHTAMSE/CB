@@ -5,6 +5,7 @@ from app.api.deps import SessionDep
 from app.crud import get_all_user_device, get_user_device_using_id,  delete_user_device, create_user_device, update_user_device, get_register_id
 from app.models import UserDevice
 from app.schemas import user_device
+from uuid import UUID
 
 router = APIRouter()
 
@@ -39,3 +40,14 @@ def create_new_user_device(session: SessionDep, user_req: user_device.CreateUser
 def get_all_new_user_device(session: SessionDep):
     get_user_device = get_all_user_device(session=session)
     return [user_device.to_user_device_res(s) for s in get_user_device]
+
+
+@router.get("{user_device_no}", response_model=user_device.CreateUserDeviceRes)
+def get_user_device_using_user_device(session: SessionDep, user_device_no: UUID):
+    existing_user_id = get_user_device_using_id(session=session, user_id=user_device_no)
+    if not existing_user_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User device is not found"
+        )
+    return user_device.to_user_device_res(existing_user_id)
