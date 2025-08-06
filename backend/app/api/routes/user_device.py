@@ -81,3 +81,17 @@ def update_user_device_using_user_device_number(
 
     updated_user_device = update_user_device(session=session, user_device=existing_user_device)
     return user_device.to_user_device_res(updated_user_device)
+
+
+@router.delete("{user_device_no}", response_model=user_device.CreateUserDeviceRes)
+def delete_user_device_using_user_device_number(session: SessionDep, user_device_no: UUID):
+    existing_user_device = get_user_device_using_id(session=session, user_id=user_device_no)
+    if not existing_user_device:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User device is not found"
+        )
+    delete_user_device(session=session, user_device=existing_user_device)
+    return JSONResponse(
+        content="User device is deleted successfully"
+    )
