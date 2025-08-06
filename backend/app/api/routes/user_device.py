@@ -33,3 +33,9 @@ def create_new_user_device(session: SessionDep, user_req: user_device.CreateUser
         session=session, user_device=new_user_device
     )
     return user_device.to_user_device_res(new_user_device)
+
+
+@router.get("/", response_model=List[user_device.CreateUserDeviceRes])
+def get_all_new_user_device(session: SessionDep):
+    get_user_device = get_all_user_device(session=session)
+    return [user_device.to_user_device_res(s) for s in get_user_device]
