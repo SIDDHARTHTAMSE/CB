@@ -22,7 +22,8 @@ from app.models import (
     Experience,
     PaymentDetails,
     Qualification,
-    UserDevice
+    UserDevice,
+    UserLoginLogs
 )
 
 
@@ -446,4 +447,40 @@ def update_user_device(session: Session, user_device: UserDevice):
 
 def delete_user_device(session: Session, user_device: UserDevice):
     session.delete(user_device)
+    session.commit()
+
+
+# user login logs CRUD
+def get_user_login_logs(session: Session):
+    session.exec(select(UserLoginLogs)).all()
+
+
+def get_user_login_logs_by_id(session: Session, login_id: UUID) -> UserLoginLogs | None:
+    query = select(UserLoginLogs).where(UserLoginLogs.id == login_id)
+    user_login_logs = session.exec(query).one_or_none()
+    return user_login_logs
+
+
+def get_user_login_logs_by_login_id(session: Session, login_id: str):
+    query = select(UserLoginLogs).where(UserLoginLogs.log_id == login_id)
+    login_id = session.exec(query).one_or_none()
+    return login_id
+
+
+def create_user_login_logs(session: Session, login_logs: UserLoginLogs):
+    session.add(login_logs)
+    session.commit()
+    session.refresh(login_logs)
+    return login_logs
+
+
+def update_user_login_logs(session: Session, login_logs: UserLoginLogs):
+    session.add(login_logs)
+    session.commit()
+    session.refresh(login_logs)
+    return login_logs
+
+
+def delete_user_login_logs(session: Session, login_logs: UserLoginLogs):
+    session.delete(login_logs)
     session.commit()
