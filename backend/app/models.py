@@ -184,6 +184,8 @@ class Register(SQLModel, table=True):
 
     user_device: List["UserDevice"] = Relationship(back_populates="register")
 
+    user_login_logs: List["UserLoginLogs"] = Relationship(back_populates="register")
+
 
 class Instructor(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
@@ -270,3 +272,16 @@ class UserDevice(SQLModel, table=True):
     register_id: uuid.UUID = Field(foreign_key="register.id", nullable=False)
 
     register: Optional[Register] = Relationship(back_populates="user_device")
+
+
+class UserLoginLogs(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    log_id: str = Field(nullable=False, unique=True)
+    login_time: datetime = Field(default_factory=datetime.utcnow)
+    logout_time: datetime = Field(default_factory=datetime.utcnow)
+    location: str = Field(min_length=2, max_length=50)
+    device: str = Field(nullable=False)
+
+    register_id: uuid.UUID = Field(foreign_key="register.id", nullable=False)
+
+    register: Optional[Register] = Relationship(back_populates="user_login_logs")
