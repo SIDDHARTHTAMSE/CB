@@ -60,3 +60,34 @@ def get_user_login_logs_by_user_login_logs_id(session: SessionDep, login_logs_id
             detail="User Login Logs id is not found"
         )
     return user_login_logs.to_user_login_logs_res(existing_user_logs)
+
+
+@router.put("{login_logs_id}", response_model=user_login_logs.UserLogsLoginRes)
+def update_new_user_login_logs(
+        session: SessionDep,
+        login_logs_id: UUID,
+        user_req: user_login_logs.UpdateUserLoginLogs
+):
+    existing_register_id = get_register_id(session=session, register_id=user_req.register_id)
+    if not existing_register_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Register id is not found"
+        )
+
+    existing_user_logs = get_user_login_logs_by_id(session=session, login_id=login_logs_id)
+    if not existing_user_logs:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User login logs id is not found"
+        )
+
+    existing_user_logs.register_id = user_req.register_id
+    existing_user_logs.log_id = user_req.log_id
+    existing_user_logs.login_time = user_req.login_time
+    existing_user_logs.logout_time = user_req.logout_time
+    existing_user_logs.device = user_req.device
+    existing_user_logs.location = user_req.location
+
+    updated_user_login_logs = update_user_login_logs(session=session, login_logs=existing_user_logs)
+    return user_login_logs.to_user_login_logs_res(updated_user_login_logs)
