@@ -16,7 +16,8 @@ from app.api.routes import (
     experience,
     payment_details,
     qualification,
-    user_device
+    user_device,
+    user_login_logs
 )
 
 
@@ -37,3 +38,4 @@ api_router.include_router(experience.router, prefix="/experience", tags=["experi
 api_router.include_router(payment_details.router, prefix="/payment_details", tags=["payment_details"])
 api_router.include_router(qualification.router, prefix="/qualification", tags=["qualification"])
 api_router.include_router(user_device.router, prefix="/user_device", tags=["user_device"])
+api_router.include_router(user_login_logs.router, prefix="/user_login_logs", tags=["user_login_logs"])
