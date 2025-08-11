@@ -452,7 +452,7 @@ def delete_user_device(session: Session, user_device: UserDevice):
 
 # user login logs CRUD
 def get_user_login_logs(session: Session):
-    session.exec(select(UserLoginLogs)).all()
+    return session.exec(select(UserLoginLogs)).all()
 
 
 def get_user_login_logs_by_id(session: Session, login_id: UUID) -> UserLoginLogs | None:
