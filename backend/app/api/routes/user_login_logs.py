@@ -1,8 +1,9 @@
-from app.models import UserLoginLogs, Register
+from app.models import UserLoginLogs
 from app.schemas import user_login_logs
 from app.api.deps import SessionDep, HTTPException, status
 from fastapi import APIRouter
 from typing import List
+from uuid import UUID
 from app.crud import (get_user_login_logs,
                       create_user_login_logs,
                       delete_user_login_logs,
@@ -47,3 +48,15 @@ def create_new_user_login_logs(session: SessionDep, user_req: user_login_logs.Cr
 def get_all_user_login_logs(session: SessionDep):
     get_all_new_users_login_logs = get_user_login_logs(session=session)
     return [user_login_logs.to_user_login_logs_res(s) for s in get_all_new_users_login_logs]
+
+
+@router.get("{login_logs_id}", response_model=user_login_logs.UserLogsLoginRes)
+def get_user_login_logs_by_user_login_logs_id(session: SessionDep, login_logs_id: UUID):
+    existing_user_logs = get_user_login_logs_by_id(session=session, login_id=login_logs_id)
+
+    if not existing_user_logs:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User Login Logs id is not found"
+        )
+    return user_login_logs.to_user_login_logs_res(existing_user_logs)
