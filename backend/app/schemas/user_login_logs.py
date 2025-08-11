@@ -27,7 +27,7 @@ class UpdateUserLoginLogs(BaseModel):
     device: Optional[str] = None
 
 
-def to_user_login_logs_res(user_logs: UserLogsLoginRes):
+def to_user_login_logs_res(user_logs: UserLoginLogs):
     return UserLogsLoginRes(
         register_id=user_logs.register_id,
         log_id=user_logs.log_id,
